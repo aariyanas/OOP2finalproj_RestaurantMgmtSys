@@ -1,0 +1,126 @@
+﻿.inventory {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+    .inventory h4 {
+        margin-bottom: 10px;
+        font-size: 1.5em;
+        color: #333;
+    }
+
+    .inventory h5 {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #555;
+    }
+
+.inventory-items {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .inventory-items th, .inventory-items td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .inventory-items th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .inventory-items tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .inventory-items tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .inventory-items .delete-button {
+        background-color: #d9534f; 
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.9em;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+        .inventory-items .delete-button:hover {
+            background-color: #c9302c;
+        }
+
+    .inventory-items .order-button {
+        background-color: #5bc0de; 
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.9em;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+        .inventory-items .order-button:hover {
+            background-color: #31b0d5;
+        }
+
+    .inventory-items input[type="number"] {
+        width: 60px;
+        text-align: center;
+        margin-right: 10px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+.add-inventory-item {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+    .add-inventory-item h4 {
+        margin-bottom: 15px;
+    }
+
+    .add-inventory-item input {
+        display: block;
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+    .add-inventory-item button {
+        background-color: #5bc0de;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1em;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .add-inventory-item button:hover {
+            background-color: #31b0d5;
+        }

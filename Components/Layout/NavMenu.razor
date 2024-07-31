@@ -1,0 +1,32 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">RestaurantManagement</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="menu">
+                <span class="fa-solid fa-utensils fa-lg" aria-hidden="true"></span> <span style="margin-left: 10px;">Menu</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="inventory">
+                <span class="fa-solid fa-cart-flatbed fa-lg" aria-hidden="true"></span> <span style="margin-left: 10px;">Inventory</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="employees">
+                <span class="fa-solid fa-users fa-lg" aria-hidden="true"></span> <span style="margin-left: 10px;">Employees</span>
+            </NavLink>
+        </div>
+    </nav>
+</div>

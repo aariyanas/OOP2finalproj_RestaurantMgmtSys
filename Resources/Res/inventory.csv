@@ -1,0 +1,17 @@
+Burger Buns,100,0.15,Burger
+Cheddar Cheese,200,0.1,Burger
+Bacon,150,0.2,Burger
+Beef Patties,120,1.5,Burger
+Checken Patties,80,2,Burger
+Frozen Onion Rings,50,0.25,Side
+Frozen French Fries,60,0.3,Side
+Frozen Mozzarella Sticks,40,0.4,Side
+Soft Drinks Syrup,30,0.1,Drink
+Milkshake Mix,25,1,Drink
+Iced Tea Bags,20,0.05,Drink
+Brownie Mix,15,2,Dessert
+Cheesecake Mix,20,2.5,Dessert
+Apple Pie Filling,25,1.2,Dessert
+Ketchup,50,0.15,Condiments
+Mustard,50,0.1,Condiments
+Mayonnaise,50,0.12,Condiments

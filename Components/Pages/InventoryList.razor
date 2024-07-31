@@ -1,0 +1,116 @@
+﻿@page "/inventory"
+@using RestaurantManagement.Data
+@inject IJSRuntime JSRuntime
+@inject InventoryDB InventoryDb
+
+<div class="inventory">
+    <h4>Current Inventory Items</h4>
+    @if (inventoryList == null || !inventoryList.Any())
+    {
+        <p>No inventory items found</p>
+    }
+    else
+    {
+        @foreach (var categoryGroup in inventoryList.GroupBy(item => item.Category))
+        {
+            <h5>@categoryGroup.Key</h5>
+            <table class="inventory-items">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Order</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in categoryGroup)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Price</td>
+                            <td>
+                                <input type="number" min="0" step="1" @bind="item.QuantityToOrder" />
+                            </td>
+                            <td>
+                                <button class="order-button" @onclick="@(async () => await ConfirmOrder(item))">Order</button>
+                                <button class="delete-button" @onclick="@(async () => await ConfirmDelete(item))">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+</div>
+
+@code {
+    private string name = string.Empty;
+    private string quantity = string.Empty;
+    private string price = string.Empty;
+    private string category = string.Empty;
+    private Inventory editingItem = null;
+    private string quantityToOrder = string.Empty;
+
+
+    private List<Inventory> inventoryList = new List<Inventory>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadInventory();
+    }
+
+    private async Task LoadInventory()
+    {
+        try
+        {
+            inventoryList = (await InventoryDb.GetInventory()).OrderBy(item => item.Name).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading inventory: {ex.Message}");
+        }
+    }
+
+    private async Task ConfirmOrder(Inventory item)
+    {
+        try
+        {
+            if (item.QuantityToOrder > 0)
+            {
+                item.Quantity += item.QuantityToOrder;
+                item.QuantityToOrder = 0;
+                await InventoryDb.UpdateInventoryItem(item);
+                await LoadInventory();
+            }
+            else
+            {
+                Console.WriteLine("Invalid quantity to order.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error confirming order: {ex.Message}");
+        }
+    }
+
+
+    private async Task ConfirmDelete(Inventory item)
+    {
+        try
+        {
+            var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this item?");
+            if (confirmed)
+            {
+                await InventoryDb.DeleteInventoryItem(item);
+                await LoadInventory();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error confirming delete: {ex.Message}");
+        }
+    }
+}
