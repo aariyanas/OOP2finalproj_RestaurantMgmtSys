@@ -135,3 +135,12 @@
         .add-menu-item button:hover {
             background-color: #31b0d5;
         }
+
+
+.menu-items .edit-button {
+    background-color: #5bc0de; 
+}
+
+    .menu-items .edit-button:hover {
+        background-color: #31b0d5;
+    }

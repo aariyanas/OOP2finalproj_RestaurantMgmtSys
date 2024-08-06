@@ -7,20 +7,26 @@ using SQLite;
 
 namespace RestaurantManagement.Data
 {
-    [Table("Menu")]
     public class Menu
     {
-        [PrimaryKey, AutoIncrement]
-        [Column("Id")]
-        public int Id  { get; set; }
+        string name;
+        double price;
+        string category;
 
-        [Column("Name")]
-        public string Name { get; set; }
+        public Menu()
+        {
+            
+        }
 
-        [Column("Price")]
-        public double Price { get; set; }
+        public string Name { get => name; set => name = value; }
+        public double Price { get => price; set => price = value; }
+        public string Category { get => category; set => category = value; }
 
-        [Column("Category")]
-        public string Category { get; set; }
+        public Menu(string name, double price, string category)
+        {
+            this.name = name;
+            this.price = price;
+            this.category = category;
+        }
     }
 }

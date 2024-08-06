@@ -7,28 +7,33 @@ using SQLite;
 
 namespace RestaurantManagement.Data
 {
-    [Table("Inventory")]
     public class Inventory
     {
-        [PrimaryKey, AutoIncrement]
-        [Column("Id")]
-        public int Id { get; set; }
+        string name;
+        int quantity;
+        double price;
+        string category;
+        int quantityToOrder;
 
-        [Column("Name")]
-        public string Name { get; set; }
+        public Inventory()
+        {
+            
+        }
 
-        [Column("Quantity")]
-        public double Quantity { get; set; }
+        public string Name { get => name; set => name = value; }
+        public int Quantity { get => quantity; set => quantity = value; }
+        public double Price { get => price; set => price = value; }
+        public string Category { get => category; set => category = value; }
+        public int QuantityToOrder { get => quantityToOrder; set => quantityToOrder = value; }
 
-        [Column("Price")]
-        public string Price { get; set; }
 
-        [Column("Category")]
-        public string Category { get; set; }
 
-        [Column("QuantityToOrder")]
-        public double QuantityToOrder { get; set; }
-
-     
+        public Inventory(string name, int quantity, double price, string category)
+        {
+            this.name = name;
+            this.quantity = quantity;
+            this.price = price;
+            this.category = category;
+        }
     }
 }

@@ -7,26 +7,23 @@ using SQLite;
 
 namespace RestaurantManagement.Data
 {
-    [Table("Employees")]
     public class Employees
     {
-        [PrimaryKey, AutoIncrement]
-        [Column("Id")]
-        public int Id { get; set; }
+        string name;
+        string position;
+        string email;
+        DateTime joinDate;
+        double wage;
 
-        [Column("Name")]
-        public string Name { get; set; }
+        public Employees()
+        {
+            
+        }
 
-        [Column("Position")]
-        public double Position { get; set; }
-
-        [Column("Email")]
-        public string Email { get; set; }
-
-        [Column("JoinDate")]
-        public string JoinDate { get; set; }
-
-        [Column("Wage")]
-        public double Wage { get; set; }
+        public string Name { get => name; set => name = value; }
+        public string Position { get => position; set => position = value; }
+        public string Email { get => email; set => email = value; }
+        public DateTime JoinDate { get => joinDate; set => joinDate = value; }
+        public double Wage { get => wage; set => wage = value; }
     }
 }

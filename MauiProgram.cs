@@ -17,9 +17,6 @@ namespace RestaurantManagement
                 });
 
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddSingleton<MenuDB>();
-            builder.Services.AddSingleton<InventoryDB>();
-            //builder.Services.AddSingleton<EmployeeDB>();
             builder.Services.AddTransient<MainPage>();
             
 

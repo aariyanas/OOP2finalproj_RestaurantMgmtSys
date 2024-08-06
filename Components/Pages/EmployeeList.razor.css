@@ -1,51 +1,52 @@
-﻿.inventory {
+﻿
+.employee-list {
     padding: 20px;
     font-family: Arial, sans-serif;
 }
 
-    .inventory h4 {
+    .employee-list h3 {
         margin-bottom: 10px;
         font-size: 1.5em;
         color: #333;
     }
 
-    .inventory h5 {
+    .employee-list h5 {
         margin-top: 20px;
         font-size: 1.2em;
         color: #555;
     }
 
-.inventory-items {
+.employee-items {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
-    .inventory-items th, .inventory-items td {
+    .employee-items th, .employee-items td {
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
     }
 
-    .inventory-items th {
+    .employee-items th {
         background-color: #f4f4f4;
         font-weight: bold;
         color: #333;
     }
 
-    .inventory-items tr:nth-child(even) {
+    .employee-items tr:nth-child(even) {
         background-color: #f9f9f9;
     }
 
-    .inventory-items tr:hover {
+    .employee-items tr:hover {
         background-color: #f1f1f1;
     }
 
-    .inventory-items .delete-button {
-        background-color: #d9534f; 
+    .employee-items .delete-button,
+    .employee-items .edit-button {
         border: none;
         color: white;
-        padding: 8px 12px;
+        padding: 6px 12px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
@@ -55,48 +56,50 @@
         margin-right: 5px;
     }
 
-        .inventory-items .delete-button:hover {
-            background-color: #c9302c;
+    .employee-items .delete-button {
+        background-color: #d9534f;
+    }
+
+        .employee-items .delete-button:hover {
+            background-color: #c9302c; 
         }
 
-    .inventory-items .order-button {
-        background-color: #5bc0de; 
-        border: none;
-        color: white;
-        padding: 8px 12px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 0.9em;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 5px;
+    .employee-items .edit-button {
+        background-color: #5bc0de;
     }
 
-        .inventory-items .order-button:hover {
+        .employee-items .edit-button:hover {
             background-color: #31b0d5;
         }
 
-    .inventory-items input[type="number"] {
-        width: 60px;
-        text-align: center;
-        margin-right: 10px;
-        padding: 5px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
-
-.add-inventory-item select {
-    display: block;
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+button {
+    font-family: Arial, sans-serif;
+    border: none;
+    color: white;
+    padding: 6px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
     font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+    background-color: #5bc0de;
 }
 
-.add-inventory-item {
+    button:hover {
+        background-color: #31b0d5; 
+    }
+
+
+.employee-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.add-employee {
     margin-top: 20px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -104,11 +107,7 @@
     background-color: #f9f9f9;
 }
 
-    .add-inventory-item h4 {
-        margin-bottom: 15px;
-    }
-
-    .add-inventory-item input {
+    .add-employee input {
         display: block;
         width: calc(100% - 22px);
         padding: 10px;
@@ -118,7 +117,7 @@
         font-size: 1em;
     }
 
-    .add-inventory-item button {
+    .add-employee button {
         background-color: #5bc0de;
         border: none;
         color: white;
@@ -131,6 +130,6 @@
         cursor: pointer;
     }
 
-        .add-inventory-item button:hover {
-            background-color: #31b0d5;
+        .add-employee button:hover {
+            background-color: #31b0d5; 
         }

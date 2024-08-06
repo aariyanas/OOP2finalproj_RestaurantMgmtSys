@@ -1,19 +1,18 @@
 ﻿@page "/inventory"
 @using RestaurantManagement.Data
 @inject IJSRuntime JSRuntime
-@inject InventoryDB InventoryDb
 
 <div class="inventory">
-    <h4>Current Inventory Items</h4>
+    <h3>Current Inventory Items</h3>
     @if (inventoryList == null || !inventoryList.Any())
     {
         <p>No inventory items found</p>
     }
     else
     {
-        @foreach (var categoryGroup in inventoryList.GroupBy(item => item.Category))
+        @foreach (var categoryGroup in inventoryList.GroupBy(item => item.Category).OrderBy(group => GetCategoryOrder(group.Key)))
         {
-            <h5>@categoryGroup.Key</h5>
+            <h5>@ToPascalCase(categoryGroup.Key)</h5>
             <table class="inventory-items">
                 <thead>
                     <tr>
@@ -28,11 +27,11 @@
                     @foreach (var item in categoryGroup)
                     {
                         <tr>
-                            <td>@item.Name</td>
+                            <td>@ToPascalCase(item.Name)</td>
                             <td>@item.Quantity</td>
-                            <td>@item.Price</td>
+                            <td>@item.Price.ToString("F2")</td>
                             <td>
-                                <input type="number" min="0" step="1" @bind="item.QuantityToOrder" />
+                                <input type="number" min="0" step="10" @bind="item.QuantityToOrder" />
                             </td>
                             <td>
                                 <button class="order-button" @onclick="@(async () => await ConfirmOrder(item))">Order</button>
@@ -44,73 +43,126 @@
             </table>
         }
     }
+
+    <div class="add-inventory-item">
+        <h4>Add New Inventory Item</h4>
+        <label>Name<input @bind="name" /></label>
+        <label>Quantity<input @bind="quantity"></label>
+        <label>Price<input @bind="price"/></label>
+        <label>
+            Category
+            <select @bind="selectedCategory">
+                @foreach (var category in categories)
+                {
+                    <option value="@category">@ToPascalCase(category)</option>
+                }
+            </select>
+        </label>
+        <button @onclick="AddInventoryItem">Add</button>
+    </div>
 </div>
 
 @code {
-    private string name = string.Empty;
-    private string quantity = string.Empty;
-    private string price = string.Empty;
-    private string category = string.Empty;
-    private Inventory editingItem = null;
-    private string quantityToOrder = string.Empty;
+    List<Inventory> inventoryList;
+    List<string> categories = new List<string> { "Burger", "Side", "Drink", "Dessert", "Condiments" };
+    string name;
+    int quantity;
+    double price;
+    string selectedCategory;
+    Inventory editingItem;
+    double editingPrice;
+    string message;
 
-
-    private List<Inventory> inventoryList = new List<Inventory>();
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await LoadInventory();
+        inventoryList = InventoryManager.RetrieveInventory();
+        selectedCategory = categories.FirstOrDefault();
     }
 
-    private async Task LoadInventory()
+    async Task AddInventoryItem()
     {
-        try
+        var pascalName = ToPascalCase(name);
+        var pascalCategory = ToPascalCase(selectedCategory);
+        if (string.IsNullOrWhiteSpace(pascalName) || string.IsNullOrWhiteSpace(pascalCategory))
         {
-            inventoryList = (await InventoryDb.GetInventory()).OrderBy(item => item.Name).ToList();
+            await JSRuntime.InvokeVoidAsync("alert", "Name and Category cannot be empty.");
+            return;
         }
-        catch (Exception ex)
+
+        InventoryManager.AddInventory(pascalName, quantity, price, pascalCategory);
+        inventoryList = InventoryManager.RetrieveInventory();
+    }
+
+    async Task EditItem(Inventory item)
+    {
+        editingItem = item;
+        editingPrice = item.Price;
+    }
+
+    async Task SaveEdit(Inventory item)
+    {
+        item.Price = editingPrice;
+        message = InventoryManager.EditInventory(ToPascalCase(item.Name), item.Quantity, item.Price, ToPascalCase(item.Category));
+        editingItem = null;
+        inventoryList = InventoryManager.RetrieveInventory();
+        await JSRuntime.InvokeVoidAsync("alert", message); // Notify user of successful update
+    }
+
+    async Task CancelEdit()
+    {
+        editingItem = null;
+    }
+
+    async Task ConfirmDelete(Inventory item)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{item.Name}'?");
+        if (confirmed)
         {
-            Console.WriteLine($"Error loading inventory: {ex.Message}");
+            message = InventoryManager.DeleteInventory(ToPascalCase(item.Name));
+            inventoryList = InventoryManager.RetrieveInventory();
+            await JSRuntime.InvokeVoidAsync("alert", message); // Notify user of successful deletion
         }
     }
 
-    private async Task ConfirmOrder(Inventory item)
+    async Task ConfirmOrder(Inventory item)
     {
-        try
+        if (item.QuantityToOrder > 0)
         {
-            if (item.QuantityToOrder > 0)
-            {
-                item.Quantity += item.QuantityToOrder;
-                item.QuantityToOrder = 0;
-                await InventoryDb.UpdateInventoryItem(item);
-                await LoadInventory();
-            }
-            else
-            {
-                Console.WriteLine("Invalid quantity to order.");
-            }
+            // Calculate new quantity by adding the ordered amount
+            int newQuantity = item.Quantity + item.QuantityToOrder;
+
+            // Update the quantity in the database
+            InventoryDBhandler db = new InventoryDBhandler();
+            db.UpdateQuantityInDB(ToPascalCase(item.Name), newQuantity);
+
+            // Refresh the inventory list
+            inventoryList = InventoryManager.RetrieveInventory();
+
+            // Show success message
+            message = $"Order placed for {item.QuantityToOrder} units of {ToPascalCase(item.Name)}. New quantity: {newQuantity}";
+            await JSRuntime.InvokeVoidAsync("alert", message);
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error confirming order: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", "Please specify a quantity to order.");
         }
     }
 
 
-    private async Task ConfirmDelete(Inventory item)
+
+    private int GetCategoryOrder(string category)
     {
-        try
-        {
-            var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this item?");
-            if (confirmed)
-            {
-                await InventoryDb.DeleteInventoryItem(item);
-                await LoadInventory();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error confirming delete: {ex.Message}");
-        }
+        return categories.IndexOf(category) != -1 ? categories.IndexOf(category) : int.MaxValue;
+    }
+
+    private string ToPascalCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input;
+
+        var words = input.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var result = string.Join(" ", words.Select(word => char.ToUpper(word[0]) + word.Substring(1)));
+        return result;
     }
 }
+

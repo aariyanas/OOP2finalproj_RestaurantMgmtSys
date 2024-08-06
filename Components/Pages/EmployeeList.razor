@@ -1,11 +1,183 @@
 ﻿@page "/employees"
 @using RestaurantManagement.Data
 @inject IJSRuntime JSRuntime
-@inject EmployeeDB EmployeeDB
 
-<h3>Employee Management</h3>
+<div class="employee-list">
+    <h3>Employee List</h3>
 
+    @if (employeeList == null || !employeeList.Any())
+    {
+        <p>No employees found</p>
+    }
+    else
+    {
+        <table class="employee-items">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Email</th>
+                    <th>Join Date</th>
+                    <th>Wage</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in employeeList)
+                {
+                    <tr>
+                        <td>
+                            @if (employee == editingEmployee)
+                            {
+                                <input @bind="editingName" class="employee-input" type="text" />
+                            }
+                            else
+                            {
+                                @employee.Name
+                            }
+                        </td>
+                        <td>
+                            @if (employee == editingEmployee)
+                            {
+                                <input @bind="editingPosition" class="employee-input" type="text" />
+                            }
+                            else
+                            {
+                                @employee.Position
+                            }
+                        </td>
+                        <td>
+                            @if (employee == editingEmployee)
+                            {
+                                <input @bind="editingEmail" class="employee-input" type="text" />
+                            }
+                            else
+                            {
+                                @employee.Email
+                            }
+                        </td>
+                        <td>
+                            @if (employee == editingEmployee)
+                            {
+                                <input @bind="editingJoinDate" type="date" />
+                            }
+                            else
+                            {
+                                @employee.JoinDate.ToString("yyyy-MM-dd")
+                            }
+                        </td>
+                        <td>
+                            @if (employee == editingEmployee)
+                            {
+                                <input @bind="editingWage" class="employee-input" type="number" step="0.01" />
+                            }
+                            else
+                            {
+                                @employee.Wage.ToString("F2")
+                            }
+                        </td>
+                        <td>
+                            @if (employee == editingEmployee)
+                            {
+                                <button @onclick="() => SaveEdit(employee)" class="save-button">Save</button>
+                                <button @onclick="CancelEdit" class="cancel-button">Cancel</button>
+                            }
+                            else
+                            {
+                                <button @onclick="() => EditEmployee(employee)" class="edit-button">Edit</button>
+                                <button @onclick="@(async () => await ConfirmDelete(employee))" class="delete-button">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="add-employee">
+        <h4>Add New Employee</h4>
+        <input @bind="newEmployeeName" placeholder="Name" />
+        <input @bind="newEmployeePosition" placeholder="Position" />
+        <input @bind="newEmployeeEmail" placeholder="Email" />
+        <input @bind="newEmployeeJoinDate" type="date" placeholder="Join Date" />
+        <input @bind="newEmployeeWage" type="number" placeholder="Wage" />
+        <button @onclick="AddEmployee" class="add-button">Add</button>
+    </div>
+</div>
 
 @code {
+    List<Employees> employeeList;
+    string newEmployeeName;
+    string newEmployeePosition;
+    string newEmployeeEmail;
+    DateTime newEmployeeJoinDate = DateTime.Now;
+    double newEmployeeWage;
+    Employees editingEmployee;
+    string editingName;
+    string editingPosition;
+    string editingEmail;
+    DateTime editingJoinDate;
+    double editingWage;
+    string message;
 
+    protected override void OnInitialized()
+    {
+        employeeList = EmployeeManager.RetrieveEmployee();
+    }
+
+    void AddEmployee()
+    {
+        EmployeeManager.AddEmployee(ToPascalCase(newEmployeeName), ToPascalCase(newEmployeePosition), newEmployeeEmail, newEmployeeJoinDate, newEmployeeWage);
+        message = "Employee added successfully";
+        employeeList = EmployeeManager.RetrieveEmployee();
+    }
+
+    void EditEmployee(Employees employee)
+    {
+        editingEmployee = employee;
+        editingName = ToPascalCase(employee.Name);
+        editingPosition = ToPascalCase(employee.Position);
+        editingEmail = employee.Email;
+        editingJoinDate = employee.JoinDate;
+        editingWage = employee.Wage;
+    }
+
+    void SaveEdit(Employees employee)
+    {
+        employee.Name = ToPascalCase(editingName);
+        employee.Position = ToPascalCase(editingPosition);
+        employee.Email = editingEmail;
+        employee.JoinDate = editingJoinDate;
+        employee.Wage = editingWage;
+        message = EmployeeManager.EditEmployee(ToPascalCase(employee.Name), ToPascalCase(employee.Position), employee.Email, employee.JoinDate, employee.Wage);
+        editingEmployee = null;
+        employeeList = EmployeeManager.RetrieveEmployee();
+    }
+
+    void CancelEdit()
+    {
+        editingEmployee = null;
+    }
+
+    async Task ConfirmDelete(Employees employee)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{employee.Name}'?");
+        if (confirmed)
+        {
+            message = EmployeeManager.DeleteEmployee(ToPascalCase(employee.Name));
+            employeeList = EmployeeManager.RetrieveEmployee();
+            await JSRuntime.InvokeVoidAsync("alert", message);
+        }
+    }
+
+    private string ToPascalCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input;
+
+        var words = input.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var result = string.Join(" ", words.Select(word => char.ToUpper(word[0]) + word.Substring(1)));
+        return result;
+    }
 }
+

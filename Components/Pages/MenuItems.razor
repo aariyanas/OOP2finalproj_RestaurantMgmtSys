@@ -1,7 +1,6 @@
 ﻿@page "/menu"
 @using RestaurantManagement.Data
 @inject IJSRuntime JSRuntime
-@inject MenuDB MenuDb
 
 <div class="menu">
     <h3>Menu Items</h3>
@@ -13,7 +12,7 @@
     {
         @foreach (var categoryGroup in menuList.GroupBy(item => item.Category).OrderBy(group => GetCategoryOrder(group.Key)))
         {
-            <h5>@categoryGroup.Key</h5>
+            <h5>@ToPascalCase(categoryGroup.Key)</h5>
             <table class="menu-items">
                 <thead>
                     <tr>
@@ -26,11 +25,11 @@
                     @foreach (var item in categoryGroup)
                     {
                         <tr>
-                            <td>@item.Name</td>
+                            <td>@ToPascalCase(item.Name)</td>
                             <td>
                                 @if (item == editingItem)
                                 {
-                                    <input @bind="editingPrice" class="menu-items-input" />
+                                    <input @bind="editingPrice" class="menu-items-input" type="text" />
                                 }
                                 else
                                 {
@@ -45,7 +44,7 @@
                                 }
                                 else
                                 {
-                                    <button @onclick="() => EditItem(item)">Edit</button>
+                                    <button @onclick="() => EditItem(item)" class="edit-button">Edit</button>
                                     <button @onclick="@(async () => await ConfirmDelete(item))">Delete</button>
                                 }
                             </td>
@@ -59,86 +58,67 @@
 
 <div class="add-menu-item">
     <h4>Add New Menu Item</h4>
-    <input @bind="name" placeholder="Name" />
-    <input @bind="price" placeholder="Price" />
-    <input @bind="category" placeholder="Category" />
-    <button @onclick="AddMenuItem">Add</button>
+    Name <input @bind="name" />
+    Price <input @bind="price" type="number" step="0.01" />
+    Category <input @bind="category" />
+    <button @onclick="AddNewMenu">Add</button>
 </div>
 
 @code {
-    private string name = string.Empty;
-    private string price = string.Empty;
-    private string category = string.Empty;
-    private Menu editingItem = null;
-    private string editingPrice = string.Empty;
-    private List<Menu> menuList = new List<Menu>();
+    List<Menu> menuList;
+    string name;
+    double price;
+    string category;
+    Menu editingItem;
+    double editingPrice;
+    string message;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await LoadMenu();
+        menuList = MenuManager.RetrieveMenu();
     }
 
-    private async Task LoadMenu()
+    void AddNewMenu()
     {
-        menuList = (await MenuDb.GetMenu()).OrderBy(item => item.Price).ToList();
+        MenuManager.AddMenu(ToPascalCase(name), price, ToPascalCase(category));
+        message = "Menu item added successfully";
+        menuList = MenuManager.RetrieveMenu();
     }
 
-    private async Task AddMenuItem()
-    {
-        if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(price) && !string.IsNullOrWhiteSpace(category))
-        {
-            var newItem = new Menu
-                {
-                    Name = ToPascalCase(name),
-                    Price = double.Parse(price),
-                    Category = ToPascalCase(category)
-                };
-            await MenuDb.AddMenuItem(newItem);
-            await LoadMenu();
-
-            name = string.Empty;
-            price = string.Empty;
-            category = string.Empty;
-        }
-    }
-
-    private void EditItem(Menu item)
+    void EditItem(Menu item)
     {
         editingItem = item;
-        editingPrice = item.Price.ToString("F2");
+        editingPrice = item.Price;
     }
 
-    private void CancelEdit()
+    void SaveEdit(Menu item)
+    {
+        item.Price = editingPrice;
+        message = MenuManager.EditMenu(ToPascalCase(item.Name), item.Price, ToPascalCase(item.Category));
+        editingItem = null;
+        menuList = MenuManager.RetrieveMenu();
+    }
+
+    void CancelEdit()
     {
         editingItem = null;
-        editingPrice = string.Empty;
     }
 
-    private async Task SaveEdit(Menu item)
+    async Task ConfirmDelete(Menu item)
     {
-        if (double.TryParse(editingPrice, out double newPrice))
-        {
-            item.Price = newPrice;
-            await MenuDb.DeleteMenuItem(item);
-            await MenuDb.AddMenuItem(item);
-            await LoadMenu();
-            CancelEdit();
-        }
-    }
-
-    private async Task ConfirmDelete(Menu item)
-    {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", new object[] { "Are you sure you want to delete this item?" });
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{ToPascalCase(item.Name)}'?");
         if (confirmed)
         {
-            await DeleteMenuItem(item);
+            message = MenuManager.DeleteMenu(ToPascalCase(item.Name));
+            menuList = MenuManager.RetrieveMenu();
+            await JSRuntime.InvokeVoidAsync("alert", message);
         }
     }
 
-    private async Task DeleteMenuItem(Menu item)
+    private int GetCategoryOrder(string category)
     {
-        await MenuDb.DeleteMenuItem(item);
-        await LoadMenu();
+        var categoryOrder = new List<string> { "Burger", "Side", "Drink", "Dessert" };
+        return categoryOrder.IndexOf(category) != -1 ? categoryOrder.IndexOf(category) : int.MaxValue;
     }
 
     private string ToPascalCase(string input)
@@ -150,13 +130,13 @@
         var result = string.Join(" ", words.Select(word => char.ToUpper(word[0]) + word.Substring(1)));
         return result;
     }
-
-    private int GetCategoryOrder(string category)
-    {
-        var categoryOrder = new List<string> { "Burger", "Sides", "Drinks", "Dessert" };
-
-        return categoryOrder.IndexOf(category) != -1 ? categoryOrder.IndexOf(category) : int.MaxValue;
-    }
 }
+
+
+
+
+
+
+
 
 
