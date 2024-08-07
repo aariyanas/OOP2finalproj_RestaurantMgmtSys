@@ -2,6 +2,7 @@
 @using RestaurantManagement.Data
 @inject IJSRuntime JSRuntime
 
+<!-- Inventory items section -->
 <div class="inventory">
     <h3>Current Inventory Items</h3>
     @if (inventoryList == null || !inventoryList.Any())
@@ -44,6 +45,7 @@
         }
     }
 
+    <!-- Add new inventory item section -->
     <div class="add-inventory-item">
         <h4>Add New Inventory Item</h4>
         <label>Name<input @bind="name" /></label>
@@ -63,22 +65,28 @@
 </div>
 
 @code {
+    // List to store inventory items
     List<Inventory> inventoryList;
+    // List of categories for the dropdown
     List<string> categories = new List<string> { "Burger", "Side", "Drink", "Dessert", "Condiments" };
+    // Variables for new inventory item input fields
     string name;
     int quantity;
     double price;
     string selectedCategory;
+    // Variables for editing inventory items
     Inventory editingItem;
     double editingPrice;
     string message;
 
+    // Load inventory items when the component is initialized
     protected override void OnInitialized()
     {
         inventoryList = InventoryManager.RetrieveInventory();
         selectedCategory = categories.FirstOrDefault();
     }
 
+    // Add new inventory item
     async Task AddInventoryItem()
     {
         var pascalName = ToPascalCase(name);
@@ -93,26 +101,30 @@
         inventoryList = InventoryManager.RetrieveInventory();
     }
 
+    // Edit inventory item
     async Task EditItem(Inventory item)
     {
         editingItem = item;
         editingPrice = item.Price;
     }
 
+    // Save the edited inventory item
     async Task SaveEdit(Inventory item)
     {
         item.Price = editingPrice;
         message = InventoryManager.EditInventory(ToPascalCase(item.Name), item.Quantity, item.Price, ToPascalCase(item.Category));
         editingItem = null;
         inventoryList = InventoryManager.RetrieveInventory();
-        await JSRuntime.InvokeVoidAsync("alert", message); // Notify user of successful update
+        await JSRuntime.InvokeVoidAsync("alert", message);
     }
 
+    // Cancel the edit operation
     async Task CancelEdit()
     {
         editingItem = null;
     }
 
+    // Confirm the deletion of an inventory item
     async Task ConfirmDelete(Inventory item)
     {
         bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{item.Name}'?");
@@ -120,25 +132,22 @@
         {
             message = InventoryManager.DeleteInventory(ToPascalCase(item.Name));
             inventoryList = InventoryManager.RetrieveInventory();
-            await JSRuntime.InvokeVoidAsync("alert", message); // Notify user of successful deletion
+            await JSRuntime.InvokeVoidAsync("alert", message);
         }
     }
 
+    // Confirm the order of an inventory item
     async Task ConfirmOrder(Inventory item)
     {
         if (item.QuantityToOrder > 0)
         {
-            // Calculate new quantity by adding the ordered amount
             int newQuantity = item.Quantity + item.QuantityToOrder;
 
-            // Update the quantity in the database
             InventoryDBhandler db = new InventoryDBhandler();
             db.UpdateQuantityInDB(ToPascalCase(item.Name), newQuantity);
 
-            // Refresh the inventory list
             inventoryList = InventoryManager.RetrieveInventory();
 
-            // Show success message
             message = $"Order placed for {item.QuantityToOrder} units of {ToPascalCase(item.Name)}. New quantity: {newQuantity}";
             await JSRuntime.InvokeVoidAsync("alert", message);
         }
@@ -148,13 +157,13 @@
         }
     }
 
-
-
+    // Get the order of the category for sorting
     private int GetCategoryOrder(string category)
     {
         return categories.IndexOf(category) != -1 ? categories.IndexOf(category) : int.MaxValue;
     }
 
+    // Convert a string to PascalCase
     private string ToPascalCase(string input)
     {
         if (string.IsNullOrWhiteSpace(input))

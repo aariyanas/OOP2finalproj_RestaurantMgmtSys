@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 
 namespace RestaurantManagement.Data
 {
+    // This class manages menu-related operations, providing a higher-level interface for adding, retrieving, editing, and deleting menu items.
     public class MenuManager
     {
+        // List to store the menu items.
         public static List<Menu> menuItems;
+
+        // Method to add a new menu item.
         public static string AddMenu(string name, double price, string category)
         {
             MenuDBhandler db = new MenuDBhandler();
@@ -18,6 +22,7 @@ namespace RestaurantManagement.Data
             return "Menu item added successfully";
         }
 
+        // Method to retrieve all menu items from the database.
         public static List<Menu> RetrieveMenu()
         {
            MenuDBhandler db = new MenuDBhandler();
@@ -25,6 +30,7 @@ namespace RestaurantManagement.Data
             return menuItems;
         }
 
+        // Method to edit an existing menu item.
         public static string EditMenu(string name, double price, string category)
         {
             string message = MenuDBhandler.UpdateMenuToDB(name, price, category);
@@ -32,6 +38,7 @@ namespace RestaurantManagement.Data
             return message;
         }
 
+        // Method to delete a menu item.
         public static string DeleteMenu(string name)
         {
             MenuDBhandler db = new MenuDBhandler();

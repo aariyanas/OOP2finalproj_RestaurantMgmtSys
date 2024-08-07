@@ -1,7 +1,27 @@
-﻿@page "/menu"
+﻿@*
+Group 8 Final Project - Restaurant Management Application
+Name: Aariyana Sayani, Jiwon Uh, Nicole Paco, Riya Johari
+Date: August 9, 2024
+Program Description:
+This application is designed for restaurant management, featuring multiple sections for efficiently handling different aspects of the restaurant's operations.
+- Menu Management: Users can view and manage menu items through the Menu page.
+This page allows for the addition, editing, and deletion of menu items. Items are displayed by category, with options to update item prices or add new items.
+- Inventory Management: This page handles the restaurant's inventory.
+Users can view current inventory items, place orders to restock items, and delete inventory records.
+It includes functionality for adding new inventory items, specifying details such as name, quantity, price, and category.
+This page helps in tracking inventory levels and ordering supplies as needed.
+- Employee Management: The employee management page enables users to maintain employee records.
+It includes functionality for viewing, adding, editing, and deleting employee information.
+Key details such as name, position, email, join date, and wage are managed here, ensuring accurate and up-to-date records for all staff members.
+Overall, the program streamlines the management of menu items, inventory, and employee information,
+providing a user-friendly interface to support restaurant operations and administrative tasks.
+*@
+
+@page "/menu"
 @using RestaurantManagement.Data
 @inject IJSRuntime JSRuntime
 
+<!-- Menu Items section -->
 <div class="menu">
     <h3>Menu Items</h3>
     @if (menuList == null || !menuList.Any())
@@ -56,6 +76,7 @@
     }
 </div>
 
+<!-- Add new menu item section -->
 <div class="add-menu-item">
     <h4>Add New Menu Item</h4>
     Name <input @bind="name" />
@@ -65,19 +86,24 @@
 </div>
 
 @code {
+    // List to stroe menu items
     List<Menu> menuList;
+    // Variables for new menu item input fields
     string name;
     double price;
     string category;
+    // Variables for editing menu items
     Menu editingItem;
     double editingPrice;
     string message;
 
+    // Load menu items when the component is initialized
     protected override void OnInitialized()
     {
         menuList = MenuManager.RetrieveMenu();
     }
 
+    // Add a new menu item
     void AddNewMenu()
     {
         MenuManager.AddMenu(ToPascalCase(name), price, ToPascalCase(category));
@@ -85,12 +111,14 @@
         menuList = MenuManager.RetrieveMenu();
     }
 
+    // Edit an existing menu item
     void EditItem(Menu item)
     {
         editingItem = item;
         editingPrice = item.Price;
     }
 
+    // Save the edited menu item
     void SaveEdit(Menu item)
     {
         item.Price = editingPrice;
@@ -99,11 +127,13 @@
         menuList = MenuManager.RetrieveMenu();
     }
 
+    // Cancel the edit operation
     void CancelEdit()
     {
         editingItem = null;
     }
 
+    // Confirm the deletion of a menu item
     async Task ConfirmDelete(Menu item)
     {
         bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{ToPascalCase(item.Name)}'?");
@@ -115,12 +145,14 @@
         }
     }
 
+    // Get the order of the category for sorting
     private int GetCategoryOrder(string category)
     {
         var categoryOrder = new List<string> { "Burger", "Side", "Drink", "Dessert" };
         return categoryOrder.IndexOf(category) != -1 ? categoryOrder.IndexOf(category) : int.MaxValue;
     }
 
+    // Convert a string to PascalCase
     private string ToPascalCase(string input)
     {
         if (string.IsNullOrWhiteSpace(input))

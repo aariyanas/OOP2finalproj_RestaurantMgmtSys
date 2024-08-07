@@ -8,19 +8,24 @@ using System.Data.SQLite;
 
 namespace RestaurantManagement.Data
 {
+    // This class handles database operations related to the Menu in the restaurant management system.
     public class MenuDBhandler
     {
+        // List to store Menu objects.
         static List<Menu> menuList = new List<Menu>();
 
+        // Database path and connection string.
         static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         static string dbPath = Path.Combine(baseDirectory, "menu.db");
         static string connect_string = $"Data Source={dbPath}";
 
+        // Constructor that loads menu items from the database.
         public MenuDBhandler()
         {
             LoadMenuFromDB();
         }
 
+        // Method to check if the 'menu' table exists in the database.
         protected bool IsTableExist()
         {
             using (SQLiteConnection connection = new SQLiteConnection(connect_string))
@@ -37,6 +42,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to create the 'menu' table if it does not exist.
         private void CreateTableDB()
         {
             if (!IsTableExist())
@@ -51,6 +57,8 @@ namespace RestaurantManagement.Data
                 connection.Close();
             }
         }
+
+        // Method to load menu items from the database into the menuList.
         public List<Menu> LoadMenuFromDB()
         {
             menuList.Clear();
@@ -77,6 +85,7 @@ namespace RestaurantManagement.Data
 
         }
 
+        // Method to insert a new menu item into the database.
         public void InsertMenuDB(string name, double price, string category)
         {
             SQLiteConnection connection = new SQLiteConnection(connect_string);
@@ -93,6 +102,7 @@ namespace RestaurantManagement.Data
             connection.Close();
         }
 
+        // Method to update an existing menu item in the database.
         public static string UpdateMenuToDB(string name, double price, string category)
         {
             try
@@ -117,6 +127,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to delete a menu item from the database.
         public string DeleteMenuDB(string name)
         {
             try

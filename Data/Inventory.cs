@@ -7,19 +7,23 @@ using SQLite;
 
 namespace RestaurantManagement.Data
 {
+    // This class represents an inventory item in the restaurant management system.
     public class Inventory
     {
+        // Fields to store the name, quantity, price, and category of the inventory item.
         string name;
         int quantity;
         double price;
         string category;
         int quantityToOrder;
 
+        // Default constructor.
         public Inventory()
         {
             
         }
 
+        // Properties to get and set the name, quantity, price, and category of the inventory item.
         public string Name { get => name; set => name = value; }
         public int Quantity { get => quantity; set => quantity = value; }
         public double Price { get => price; set => price = value; }
@@ -27,7 +31,7 @@ namespace RestaurantManagement.Data
         public int QuantityToOrder { get => quantityToOrder; set => quantityToOrder = value; }
 
 
-
+        // Parameterized constructor to initialize an inventory item with specified values.
         public Inventory(string name, int quantity, double price, string category)
         {
             this.name = name;

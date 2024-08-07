@@ -9,19 +9,24 @@ using System.Data.SQLite;
 
 namespace RestaurantManagement.Data
 {
+    // This class handles database operations related to the Inventory in the restaurant management system.
     public class InventoryDBhandler
     {
+        // List to store Inventory objects.
         static List<Inventory> inventoryList = new List<Inventory>();
 
+        // Database path and connection string.
         static string baseInventoryDirectory = AppDomain.CurrentDomain.BaseDirectory;
         static string dbInventoryPath = Path.Combine(baseInventoryDirectory, "inventory.db");
         static string connect_inventory_string = $"Data Source={dbInventoryPath}";
 
+        // Constructor that loads inventory items from the database.
         public InventoryDBhandler()
         {
             LoadInventoryFromDB();
         }
 
+        // Method to check if the 'inventory' table exists in the database.
         protected bool IsTableExist()
         {
             using (SQLiteConnection connection = new SQLiteConnection(connect_inventory_string))
@@ -38,6 +43,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to create the 'inventory' table if it does not exist.
         private void CreateTableDB()
         {
             if (!IsTableExist())
@@ -53,6 +59,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to load inventory items from the database.
         public List<Inventory> LoadInventoryFromDB()
         {
             inventoryList.Clear();
@@ -79,6 +86,7 @@ namespace RestaurantManagement.Data
             return inventoryList;
         }
 
+        // Method to insert an inventory item into the database.
         public void InsertInventoryDB(string name, int quantity, double price, string category)
         {
             SQLiteConnection connection = new SQLiteConnection(connect_inventory_string);
@@ -97,6 +105,7 @@ namespace RestaurantManagement.Data
             connection.Close();
         }
 
+        // Method to update an existing inventory item in the database.
         public static string UpdateInventoryToDB(string name, int quantity, double price, string category)
         {
             try
@@ -123,6 +132,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to delete an inventory item from the database.
         public string DeleteInventoryDB(string name)
         {
             try
@@ -145,6 +155,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to update the quantity of an inventory item in the database.
         public void UpdateQuantityInDB(string name, int newQuantity)
         {
             try

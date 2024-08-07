@@ -9,19 +9,24 @@ using System.Data.SQLite;
 
 namespace RestaurantManagement.Data
 {
+    // This class handles database operations related to the Employees in the restaurant management system.
     public class EmployeeDBhandler
     {
+        // List to store Employee objects.
         static List<Employees> employeeList = new List<Employees>();
 
+        // Database path and connection string.
         static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         static string dbEmpPath = Path.Combine(baseDirectory, "employee.db");
         static string connect_emp_string = $"Data Source={dbEmpPath}";
 
+        // Constructor that loads employee items from the database.
         public EmployeeDBhandler()
         {
             LoadEmployeeFromDB();
         }
 
+        // Method to check if the 'employee' table exists in the database.
         protected bool IsTableExist()
         {
             using (SQLiteConnection connection = new SQLiteConnection(connect_emp_string))
@@ -38,7 +43,7 @@ namespace RestaurantManagement.Data
             }
         }
 
-
+        // Method to create the 'employee' table if it does not exist.
         private void CreateTableDB()
         {
             if (!IsTableExist())
@@ -54,6 +59,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to load employee items from the database.
         public List<Employees> LoadEmployeeFromDB()
         {
             employeeList.Clear();
@@ -81,6 +87,7 @@ namespace RestaurantManagement.Data
             return employeeList;
         }
 
+        // Method to insert an employee item into the database.
         public void InsertEmployeeDB(string name, string position, string email, DateTime joinDate, double wage)
         {
             SQLiteConnection connection = new SQLiteConnection(connect_emp_string);
@@ -99,6 +106,7 @@ namespace RestaurantManagement.Data
             connection.Close();
         }
 
+        // Method to update an existing employee item in the database.
         public static string UpdateEmployeeToDB(string name, string position, string email, DateTime joinDate, double wage)
         {
             try
@@ -125,6 +133,7 @@ namespace RestaurantManagement.Data
             }
         }
 
+        // Method to delete an employee item from the database.
         public string DeleteEmployeeDB(string name)
         {
             try

@@ -2,6 +2,7 @@
 @using RestaurantManagement.Data
 @inject IJSRuntime JSRuntime
 
+<!-- Employee list section -->
 <div class="employee-list">
     <h3>Employee List</h3>
 
@@ -94,6 +95,7 @@
         </table>
     }
 
+    <!-- Add new employee section -->
     <div class="add-employee">
         <h4>Add New Employee</h4>
         <input @bind="newEmployeeName" placeholder="Name" />
@@ -106,12 +108,15 @@
 </div>
 
 @code {
+    // List to store employees
     List<Employees> employeeList;
+    // Variables for new employee input fields
     string newEmployeeName;
     string newEmployeePosition;
     string newEmployeeEmail;
     DateTime newEmployeeJoinDate = DateTime.Now;
     double newEmployeeWage;
+    // Variables for editing employee
     Employees editingEmployee;
     string editingName;
     string editingPosition;
@@ -120,11 +125,13 @@
     double editingWage;
     string message;
 
+    // Retrieve employees when the page is initialized
     protected override void OnInitialized()
     {
         employeeList = EmployeeManager.RetrieveEmployee();
     }
 
+    // Add a new employee
     void AddEmployee()
     {
         EmployeeManager.AddEmployee(ToPascalCase(newEmployeeName), ToPascalCase(newEmployeePosition), newEmployeeEmail, newEmployeeJoinDate, newEmployeeWage);
@@ -132,6 +139,7 @@
         employeeList = EmployeeManager.RetrieveEmployee();
     }
 
+    // Edit an existing employee
     void EditEmployee(Employees employee)
     {
         editingEmployee = employee;
@@ -142,6 +150,7 @@
         editingWage = employee.Wage;
     }
 
+    // Save the edited employee
     void SaveEdit(Employees employee)
     {
         employee.Name = ToPascalCase(editingName);
@@ -154,11 +163,13 @@
         employeeList = EmployeeManager.RetrieveEmployee();
     }
 
+    // Cancel the edit
     void CancelEdit()
     {
         editingEmployee = null;
     }
 
+    // Confirm the delete operation
     async Task ConfirmDelete(Employees employee)
     {
         bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{employee.Name}'?");
@@ -170,6 +181,7 @@
         }
     }
 
+    // Convert the input string to PascalCase
     private string ToPascalCase(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
