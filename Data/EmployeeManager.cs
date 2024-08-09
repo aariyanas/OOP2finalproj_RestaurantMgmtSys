@@ -15,12 +15,10 @@ namespace RestaurantManagement.Data
         public static List<Employees> employeeList;
 
         // Method to add a new employee.
-
         public static string AddEmployee(string name, string position, string email, DateTime joinDate, double wage)
         {
-            int id = GenerateID();
             EmployeeDBhandler db = new EmployeeDBhandler();
-            db.InsertEmployeeDB(id, name, position, email, joinDate, wage);
+            db.InsertEmployeeDB(name, position, email, joinDate, wage);
             return "Employee added successfully";
         }
 
@@ -33,29 +31,20 @@ namespace RestaurantManagement.Data
         }
 
         // Method to edit an existing employee.
-        public static string EditEmployee(int id, string name, string position, string email, DateTime joinDate, double wage)
+        public static string EditEmployee(string name, string position, string email, DateTime joinDate, double wage)
         {
-            int tracker = employeeList.Count();
-            Employees toEdit = employeeList.Find(e => e.Id == id);
-            string message = EmployeeDBhandler.UpdateEmployeeToDB(toEdit.Id, name, position, email, joinDate, wage);
+            string message = EmployeeDBhandler.UpdateEmployeeToDB(name, position, email, joinDate, wage);
             RetrieveEmployee();
             return message;
         }
 
         // Method to delete an employee.
-        public static string DeleteEmployee(int id)
+        public static string DeleteEmployee(string name)
         {
             EmployeeDBhandler db = new EmployeeDBhandler();
-            string message = db.DeleteEmployeeDB(id);
+            string message = db.DeleteEmployeeDB(name);
             RetrieveEmployee();
             return message;
-        }
-
-        public static int GenerateID()
-        {
-            int currentNumEmployees = RetrieveEmployee().Count();
-            int nextEmployeeID = currentNumEmployees++;
-            return nextEmployeeID;
         }
     }
 }

@@ -50,7 +50,7 @@ namespace RestaurantManagement.Data
             {
                 SQLiteConnection connection = new SQLiteConnection(connect_emp_string);
                 connection.Open();
-                string sql = "Create table employee( ID INT, Name TEXT(30), Position TEXT(30), Email TEXT(30), JoinDate TEXT(30), Wage REAL)";
+                string sql = "Create table employee(Name TEXT(30), Position TEXT(30), Email TEXT(30), JoinDate TEXT(30), Wage REAL)";
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, connection))
                 {
                     cmd.ExecuteNonQuery();
@@ -73,14 +73,13 @@ namespace RestaurantManagement.Data
                 {
                     while (reader.Read())
                     {
-                        Employees employee = new Employees();
-                        employee.Id = Convert.ToInt32(reader["ID"]);
-                        employee.Name = reader["Name"].ToString();
-                        employee.Position = reader["Position"].ToString();
-                        employee.Email = reader["Email"].ToString();
-                        employee.JoinDate = Convert.ToDateTime(reader["JoinDate"]);
-                        employee.Wage = Convert.ToDouble(reader["Wage"]);
-                        employeeList.Add(employee);
+                        Employees emp = new Employees();
+                        emp.Name = reader["Name"].ToString();
+                        emp.Position = reader["Position"].ToString();
+                        emp.Email = reader["Email"].ToString();
+                        emp.JoinDate = Convert.ToDateTime(reader["JoinDate"]);
+                        emp.Wage = Convert.ToDouble(reader["Wage"]);
+                        employeeList.Add(emp);
                     }
                 }
             }
@@ -89,15 +88,14 @@ namespace RestaurantManagement.Data
         }
 
         // Method to insert an employee item into the database.
-        public void InsertEmployeeDB(int id, string name, string position, string email, DateTime joinDate, double wage)
+        public void InsertEmployeeDB(string name, string position, string email, DateTime joinDate, double wage)
         {
             SQLiteConnection connection = new SQLiteConnection(connect_emp_string);
             connection.Open();
-            string sql = $"Insert into employee(ID, Name, Position, Email, JoinDate, Wage) values('{id}', '{name}', '{position}', '{email}', '{joinDate}', '{wage}')";
+            string sql = $"Insert into employee(Name, Position, Email, JoinDate, Wage) values('{name}', '{position}', '{email}', '{joinDate}', '{wage}')";
             SQLiteCommand cmd = new SQLiteCommand(sql, connection);
             using (cmd)
             {
-                cmd.Parameters.AddWithValue("id", id);
                 cmd.Parameters.AddWithValue("@name", name);
                 cmd.Parameters.AddWithValue("@position", position);
                 cmd.Parameters.AddWithValue("@email", email);
@@ -109,13 +107,13 @@ namespace RestaurantManagement.Data
         }
 
         // Method to update an existing employee item in the database.
-        public static string UpdateEmployeeToDB(int id, string name, string position, string email, DateTime joinDate, double wage)
+        public static string UpdateEmployeeToDB(string name, string position, string email, DateTime joinDate, double wage)
         {
             try
             {
                 SQLiteConnection connection = new SQLiteConnection(connect_emp_string);
                 connection.Open();
-                string sql = "Update employee set Name = @name, Position = @position, Email = @email, JoinDate = @joinDate, Wage = @wage where ID = @id";
+                string sql = "Update employee set Position = @position, Email = @email, JoinDate = @joinDate, Wage = @wage where Name = @name";
                 SQLiteCommand cmd = new SQLiteCommand(sql, connection);
                 using (cmd)
                 {
@@ -136,17 +134,17 @@ namespace RestaurantManagement.Data
         }
 
         // Method to delete an employee item from the database.
-        public string DeleteEmployeeDB(int id)
+        public string DeleteEmployeeDB(string name)
         {
             try
             {
                 SQLiteConnection connection = new SQLiteConnection(connect_emp_string);
                 connection.Open();
-                string sql = "Delete from employee where ID = @id";
+                string sql = "Delete from employee where Name = @name";
                 SQLiteCommand cmd = new SQLiteCommand(sql, connection);
                 using (cmd)
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@name", name);
                     cmd.ExecuteNonQuery();
                 }
                 connection.Close();
