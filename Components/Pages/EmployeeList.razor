@@ -28,14 +28,7 @@
                 {
                     <tr>
                         <td>
-                            @if (employee == editingEmployee)
-                            {
-                                <input @bind="editingName" class="employee-input" type="text" />
-                            }
-                            else
-                            {
-                                @employee.Name
-                            }
+                            @employee.Name                         
                         </td>
                         <td>
                             @if (employee == editingEmployee)
@@ -118,7 +111,6 @@
     double newEmployeeWage;
     // Variables for editing employee
     Employees editingEmployee;
-    string editingName;
     string editingPosition;
     string editingEmail;
     DateTime editingJoinDate;
@@ -143,7 +135,6 @@
     void EditEmployee(Employees employee)
     {
         editingEmployee = employee;
-        editingName = ToPascalCase(employee.Name);
         editingPosition = ToPascalCase(employee.Position);
         editingEmail = employee.Email;
         editingJoinDate = employee.JoinDate;
@@ -153,7 +144,6 @@
     // Save the edited employee
     void SaveEdit(Employees employee)
     {
-        employee.Name = ToPascalCase(editingName);
         employee.Position = ToPascalCase(editingPosition);
         employee.Email = editingEmail;
         employee.JoinDate = editingJoinDate;
