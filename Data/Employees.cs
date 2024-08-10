@@ -11,11 +11,11 @@ namespace RestaurantManagement.Data
     public class Employees
     {
         // Fields to store the name, position, email, join date, and wage of the employee.
-        string name;
-        string position;
-        string email;
-        DateTime joinDate;
-        double wage;
+        private string name;
+        private string position;
+        private string email;
+        private DateTime joinDate;
+        private double wage;
 
         // Default constructor.
         public Employees()
@@ -24,6 +24,17 @@ namespace RestaurantManagement.Data
         }
 
         // Parameterized constructor to initialize an employee with specified values.
+        public Employees(global::System.String name, global::System.String position, global::System.String email, DateTime joinDate, global::System.Double wage)
+        {
+            Name = name;
+            Position = position;
+            Email = email;
+            JoinDate = joinDate;
+            Wage = wage;
+        }
+
+        // Accessors and modifiers
+        // Properties to get and set the name, quantity, price, and category of the inventory item
         public string Name { get => name; set => name = value; }
         public string Position { get => position; set => position = value; }
         public string Email { get => email; set => email = value; }

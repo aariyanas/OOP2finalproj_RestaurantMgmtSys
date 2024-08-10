@@ -11,9 +11,9 @@ namespace RestaurantManagement.Data
     public class Menu
     {
         // Fields to store the name, price, and category of the menu item.
-        string name;
-        double price;
-        string category;
+        private string name;
+        private double price;
+        private string category;
 
         // Default constructor.
         public Menu()
@@ -21,6 +21,7 @@ namespace RestaurantManagement.Data
             
         }
 
+        // Accessors and modifiers
         // Properties to get and set the name, price, and category of the menu item.
         public string Name { get => name; set => name = value; }
         public double Price { get => price; set => price = value; }
@@ -29,9 +30,9 @@ namespace RestaurantManagement.Data
         // Parameterized constructor to initialize a menu item with specified values.
         public Menu(string name, double price, string category)
         {
-            this.name = name;
-            this.price = price;
-            this.category = category;
+            Name = name;
+            Price = price;
+            Category = category;
         }
     }
 }

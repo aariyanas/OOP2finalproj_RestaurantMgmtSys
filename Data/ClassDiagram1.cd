@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RestaurantManagement.Data.Menu">
+    <Position X="10.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAQAAAAAAAAAAAAQAAAAEAAAAAAAIAAAACAA=</HashCode>
+      <FileName>Data\Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.Employees">
+    <Position X="8.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAECAAAAAgAAAAIAQAAAAECAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Data\Employees.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.Inventory">
+    <Position X="6" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAQEAAAABAAAAAAQAAAAEAACAAAAIgAAACAA=</HashCode>
+      <FileName>Data\Inventory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.EmployeeManager">
+    <Position X="17" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAEAAAAIAAABAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\EmployeeManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.InventoryManager">
+    <Position X="18.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABACAAAAAAAAABAAAAAAgAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Data\InventoryManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.MenuManager">
+    <Position X="15.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAEAAAAQAAAAgAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\MenuManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="8.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RestaurantManagement.Data.InventoryDBhandler">
+    <Position X="17.5" Y="11.25" Width="1.5" />
+    <InheritanceLine Type="System.Object" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="10.625" />
+        <Point X="18.188" Y="10.625" />
+        <Point X="18.188" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAiAAAAAAAgAAAAAAAAAAAESAAAgIAAIAAABAEAAAAA=</HashCode>
+      <FileName>Data\InventoryDBhandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.MenuDBhandler">
+    <Position X="15.5" Y="11.25" Width="1.5" />
+    <InheritanceLine Type="System.Object" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="10" Y="10.625" />
+        <Point X="16.25" Y="10.625" />
+        <Point X="16.25" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAgACAAAAAAAABAEEAAAAgAACAAIAAAAAAAAA=</HashCode>
+      <FileName>Data\MenuDBhandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantManagement.Data.EmployeeDBhandler">
+    <Position X="19.25" Y="11.25" Width="1.5" />
+    <InheritanceLine Type="System.Object" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="10.625" />
+        <Point X="20" Y="10.625" />
+        <Point X="20" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAoAEAAAAAAAAAAQAAAAgAEAAAAAAAAACIAAAAAgAAA=</HashCode>
+      <FileName>Data\EmployeeDBhandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

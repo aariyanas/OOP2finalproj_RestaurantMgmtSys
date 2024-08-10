@@ -11,11 +11,11 @@ namespace RestaurantManagement.Data
     public class Inventory
     {
         // Fields to store the name, quantity, price, and category of the inventory item.
-        string name;
-        int quantity;
-        double price;
-        string category;
-        int quantityToOrder;
+        private string name;
+        private int quantity;
+        private double price;
+        private string category;
+        private int quantityToOrder;
 
         // Default constructor.
         public Inventory()
@@ -23,6 +23,7 @@ namespace RestaurantManagement.Data
             
         }
 
+        // Accessors and modifiers
         // Properties to get and set the name, quantity, price, and category of the inventory item.
         public string Name { get => name; set => name = value; }
         public int Quantity { get => quantity; set => quantity = value; }
@@ -34,10 +35,10 @@ namespace RestaurantManagement.Data
         // Parameterized constructor to initialize an inventory item with specified values.
         public Inventory(string name, int quantity, double price, string category)
         {
-            this.name = name;
-            this.quantity = quantity;
-            this.price = price;
-            this.category = category;
+            Name = name;
+            Quantity = quantity;
+            Price = price;
+            Category = category;
         }
     }
 }

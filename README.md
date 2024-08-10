@@ -1,4 +1,6 @@
 # Restaurant Management System
+CPRG-211 (OOP) - Final Project
+Jiwon Uh & Aariyana Sayani
 
 ## Overview
 
